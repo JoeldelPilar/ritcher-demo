@@ -1,0 +1,14 @@
+{
+  "name": "ritcher-demo",
+  "version": "1.0.0",
+  "description": "Demo page for Ritcher — Open-Source Live SSAI Stitcher",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  },
+  "author": "Joel del Pilar",
+  "license": "MIT"
+}

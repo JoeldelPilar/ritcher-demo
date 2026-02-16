@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ritcher Demo — Live SSAI Stitcher</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">
+          <h1>Ritcher</h1>
+          <span class="badge">SSAI Demo</span>
+        </div>
+        <p class="subtitle">
+          Open-source live HLS stitcher for Server-Side Ad Insertion
+        </p>
+      </header>
+
+      <main>
+        <div class="player-section">
+          <div class="player-wrapper">
+            <video id="video" playsinline></video>
+            <div id="ad-overlay" class="ad-overlay hidden">
+              <span>AD</span>
+            </div>
+          </div>
+          <div class="player-controls">
+            <button id="play-btn" class="btn btn-primary" disabled>
+              Loading...
+            </button>
+            <div class="volume-control">
+              <label for="volume">Vol</label>
+              <input
+                type="range"
+                id="volume"
+                min="0"
+                max="1"
+                step="0.1"
+                value="0.5"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <h2>Configuration</h2>
+          <div class="form-group">
+            <label for="stitcher-url">Stitcher Base URL</label>
+            <input
+              type="text"
+              id="stitcher-url"
+              value="http://localhost:3000"
+              placeholder="http://localhost:3000"
+            />
+          </div>
+          <div class="form-group">
+            <label for="origin-url">Origin Playlist URL</label>
+            <input
+              type="text"
+              id="origin-url"
+              value=""
+              placeholder="Leave empty for built-in demo playlist"
+            />
+            <span class="hint"
+              >Empty = Ritcher's /demo/playlist.m3u8 with CUE markers</span
+            >
+          </div>
+          <button id="load-btn" class="btn btn-accent">Load Stream</button>
+        </div>
+
+        <div class="info-section">
+          <h2>Stream Info</h2>
+          <div class="info-grid">
+            <div class="info-card">
+              <span class="info-label">Session ID</span>
+              <span id="session-id" class="info-value">—</span>
+            </div>
+            <div class="info-card">
+              <span class="info-label">Status</span>
+              <span id="stream-status" class="info-value status-idle"
+                >Idle</span
+              >
+            </div>
+            <div class="info-card">
+              <span class="info-label">Current Fragment</span>
+              <span id="current-frag" class="info-value">—</span>
+            </div>
+            <div class="info-card">
+              <span class="info-label">Ad Breaks Detected</span>
+              <span id="ad-break-count" class="info-value">0</span>
+            </div>
+          </div>
+          <div class="stream-url-display">
+            <span class="info-label">Playback URL</span>
+            <code id="playback-url">—</code>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-links">
+          <a
+            href="https://github.com/JoeldelPilar/ritcher"
+            target="_blank"
+            rel="noopener"
+            >GitHub</a
+          >
+          <span class="separator">|</span>
+          <a href="https://www.osaas.io" target="_blank" rel="noopener"
+            >Eyevinn OSC</a
+          >
+        </div>
+        <p class="footer-text">
+          Built with Rust. ~6 microseconds per manifest.
+        </p>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
