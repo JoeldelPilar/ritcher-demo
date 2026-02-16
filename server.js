@@ -6,6 +6,6 @@ const PORT = process.env.PORT || 3333;
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.listen(PORT, () => {
-  console.log(`Ritcher Demo running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Ritcher Demo running on port ${PORT}`);
 });
