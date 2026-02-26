@@ -3,33 +3,72 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ritcher Demo — Live SSAI Stitcher</title>
+    <title>Ritcher Demo — Live Ad Insertion</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
+    <script src="https://cdn.jsdelivr.net/npm/shaka-player@4.7.11/dist/shaka-player.compiled.js"></script>
   </head>
   <body>
     <div class="container">
       <header>
         <div class="logo">
           <h1>Ritcher</h1>
-          <span class="badge">SSAI Demo</span>
+          <span class="badge">Live Demo</span>
         </div>
         <p class="subtitle">
-          Open-source live HLS stitcher for Server-Side Ad Insertion
+          Open-source HLS & DASH ad insertion stitcher
         </p>
       </header>
 
       <main>
+        <!-- Demo Controls -->
+        <div class="demo-controls">
+          <div class="control-group">
+            <label for="format-select">Format</label>
+            <select id="format-select">
+              <option value="hls" selected>HLS</option>
+              <option value="dash">DASH</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="breaks-select">Ad Breaks</label>
+            <select id="breaks-select">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="interval-select">Interval</label>
+            <select id="interval-select">
+              <option value="10">10 s</option>
+              <option value="15" selected>15 s</option>
+              <option value="20">20 s</option>
+            </select>
+          </div>
+          <button id="start-btn" class="btn btn-accent">Start Demo</button>
+        </div>
+
+        <!-- Player -->
         <div class="player-section">
           <div class="player-wrapper">
             <video id="video" playsinline></video>
             <div id="ad-overlay" class="ad-overlay hidden">
-              <span>AD</span>
+              <span id="ad-overlay-text">AD</span>
             </div>
           </div>
+
+          <!-- Timeline -->
+          <div id="timeline-container" class="timeline-container hidden">
+            <div id="timeline-bar" class="timeline-bar"></div>
+            <div id="timeline-playhead" class="timeline-playhead"></div>
+          </div>
+
           <div class="player-controls">
             <button id="play-btn" class="btn btn-primary" disabled>
-              Loading...
+              Play
             </button>
             <div class="volume-control">
               <label for="volume">Vol</label>
@@ -42,35 +81,15 @@
                 value="0.5"
               />
             </div>
+            <div class="time-display">
+              <span id="time-current">0:00</span>
+              <span class="time-sep">/</span>
+              <span id="time-total">0:00</span>
+            </div>
           </div>
         </div>
 
-        <div class="config-section">
-          <h2>Configuration</h2>
-          <div class="form-group">
-            <label for="stitcher-url">Stitcher Base URL</label>
-            <input
-              type="text"
-              id="stitcher-url"
-              value="http://localhost:3000"
-              placeholder="http://localhost:3000"
-            />
-          </div>
-          <div class="form-group">
-            <label for="origin-url">Origin Playlist URL</label>
-            <input
-              type="text"
-              id="origin-url"
-              value=""
-              placeholder="Leave empty for built-in demo playlist"
-            />
-            <span class="hint"
-              >Empty = Ritcher's /demo/playlist.m3u8 with CUE markers</span
-            >
-          </div>
-          <button id="load-btn" class="btn btn-accent">Load Stream</button>
-        </div>
-
+        <!-- Stream Info -->
         <div class="info-section">
           <h2>Stream Info</h2>
           <div class="info-grid">
@@ -85,19 +104,43 @@
               >
             </div>
             <div class="info-card">
-              <span class="info-label">Current Fragment</span>
+              <span class="info-label">Current Segment</span>
               <span id="current-frag" class="info-value">—</span>
             </div>
             <div class="info-card">
-              <span class="info-label">Ad Breaks Detected</span>
+              <span class="info-label">Ad Breaks Played</span>
               <span id="ad-break-count" class="info-value">0</span>
             </div>
           </div>
-          <div class="stream-url-display">
-            <span class="info-label">Playback URL</span>
-            <code id="playback-url">—</code>
-          </div>
         </div>
+
+        <!-- Advanced toggle -->
+        <details class="advanced-section">
+          <summary>Advanced Settings</summary>
+          <div class="advanced-body">
+            <div class="form-group">
+              <label for="stitcher-url">Stitcher Base URL</label>
+              <input
+                type="text"
+                id="stitcher-url"
+                value="http://localhost:3000"
+                placeholder="http://localhost:3000"
+              />
+            </div>
+            <div class="form-group">
+              <label for="origin-url">Custom Origin URL</label>
+              <input
+                type="text"
+                id="origin-url"
+                value=""
+                placeholder="Leave empty for demo playlist"
+              />
+              <span class="hint"
+                >Override the demo origin with your own HLS/DASH playlist</span
+              >
+            </div>
+          </div>
+        </details>
       </main>
 
       <footer>
@@ -114,7 +157,7 @@
           >
         </div>
         <p class="footer-text">
-          Built with Rust. ~6 microseconds per manifest.
+          Built with Rust &amp; Axum. Open source.
         </p>
       </footer>
     </div>
