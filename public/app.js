@@ -89,7 +89,7 @@ function buildPlaybackUrl() {
 // ------- Timeline -------
 
 function buildTimeline(numBreaks, intervalSecs) {
-  const breakDuration = 30; // DemoAdProvider: 30 segments × 1s
+  const breakDuration = 10; // DemoAdProvider: 10 segments × 1s = 10s per break
   const contentSegmentDuration = 10; // Mux segments are 10s each
   const segsPerInterval = Math.floor(intervalSecs / contentSegmentDuration);
   const trailingContent = 3 * contentSegmentDuration; // 30s trailing
