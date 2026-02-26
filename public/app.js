@@ -344,7 +344,23 @@ video.addEventListener("timeupdate", () => {
   updatePlayhead();
 });
 
-// Init
-video.volume = 0.5;
-setStatus("Idle", "status-idle");
-playBtn.disabled = true;
+// Init — fetch config from server (supports OSC deployment)
+async function init() {
+  video.volume = 0.5;
+  setStatus("Idle", "status-idle");
+  playBtn.disabled = true;
+
+  try {
+    const resp = await fetch("/config");
+    if (resp.ok) {
+      const config = await resp.json();
+      if (config.ritcherUrl) {
+        stitcherUrlInput.value = config.ritcherUrl;
+      }
+    }
+  } catch {
+    // Fallback: keep default value from HTML
+  }
+}
+
+init();
