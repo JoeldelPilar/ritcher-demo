@@ -89,7 +89,7 @@ function buildPlaybackUrl() {
 // ------- Timeline -------
 
 function buildTimeline(numBreaks, intervalSecs) {
-  const breakDuration = 30; // DemoAdProvider: 30 segments × 1s
+  const breakDuration = 10; // DemoAdProvider: 10 segments × 1s = 10s per break
   const contentSegmentDuration = 10; // Mux segments are 10s each
   const segsPerInterval = Math.floor(intervalSecs / contentSegmentDuration);
   const trailingContent = 3 * contentSegmentDuration; // 30s trailing
@@ -344,7 +344,23 @@ video.addEventListener("timeupdate", () => {
   updatePlayhead();
 });
 
-// Init
-video.volume = 0.5;
-setStatus("Idle", "status-idle");
-playBtn.disabled = true;
+// Init — fetch config from server (supports OSC deployment)
+async function init() {
+  video.volume = 0.5;
+  setStatus("Idle", "status-idle");
+  playBtn.disabled = true;
+
+  try {
+    const resp = await fetch("/config");
+    if (resp.ok) {
+      const config = await resp.json();
+      if (config.ritcherUrl) {
+        stitcherUrlInput.value = config.ritcherUrl;
+      }
+    }
+  } catch {
+    // Fallback: keep default value from HTML
+  }
+}
+
+init();
